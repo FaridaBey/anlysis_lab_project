@@ -40,14 +40,14 @@ Graph::Graph(vector<Edge> const& edges, int n)
     }
 }
 
-void update_files(Website* websites1) {
-
+void update_files(Website* websites1){
+    
     ofstream imp;
     ofstream cli;
-
-    //    imp.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/impressions.csv");
+ 
+//    imp.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/impressions.csv");
     imp.open("impressions.csv");
-    for (int i = 0; i < counter; i++)
+    for(int i =0; i<counter; i++)
     {
         if (i < counter - 1)
         {
@@ -59,12 +59,12 @@ void update_files(Website* websites1) {
         }
     }
     imp.close();
-
-    //    cli.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/clicked.csv");
+    
+//    cli.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/clicked.csv");
     cli.open("clicked.csv");
-    for (int j = 0; j < counter; j++)
+    for(int j =0; j<counter; j++)
     {
-
+        
         if (j < counter - 1)
         {
             cli << websites1[j].websitename << "," << websites1[j].clicked << " \n";
@@ -77,7 +77,7 @@ void update_files(Website* websites1) {
     cli.close();
 }
 
-bool has_QuotedWord(vector<string> searchwords, vector<string> keywords) {
+bool has_QuotedWord( vector<string> searchwords,  vector<string> keywords) {
     for (const string& searchword : searchwords) {
         bool found = false;
         bool quoted = false;
@@ -107,7 +107,7 @@ bool has_QuotedWord(vector<string> searchwords, vector<string> keywords) {
     return true;
 }
 
-bool has_AND(vector<string> searchwords, vector<string> keywords) {
+bool has_AND(vector<string> searchwords, vector<string> keywords){
 
     for (int i = 0; i < searchwords.size(); i++)
     {
@@ -119,7 +119,7 @@ bool has_AND(vector<string> searchwords, vector<string> keywords) {
     }
     return true;
 }
-bool has_OR(vector<string> searchwords, vector<string> keywords) {
+bool has_OR(vector<string> searchwords, vector<string> keywords){
     for (int i = 0; i < searchwords.size(); i++)
     {
         if (find(keywords.begin(), keywords.end(), searchwords[i]) != keywords.end())
@@ -130,25 +130,25 @@ bool has_OR(vector<string> searchwords, vector<string> keywords) {
     return false;
 }
 
-float calculate_CTR(Website website) {
+float calculate_CTR(Website website){
     float CTR = (website.clicked / website.impressions) * 100;
     return CTR;
 }
-void calculate_PR(Graph graph, Website* websites, float* outgoinglinks) {
+void calculate_PR(Graph graph, Website* websites, float* outgoinglinks){
     vector< pair <float, float> > webs[4];
     vector< pair <float, float> > webs2[4];
-    for (int i = 0; i < counter; i++) {
+    for (int i = 0; i < counter; i++){
 
-        for (int j = 0; j < counter; j++) {
+        for (int j = 0; j < counter; j++){
             list<int> ::iterator it;
-            for (auto it = graph.adjList[j].begin(); it != graph.adjList[j].end(); ++it) {
+            for (auto it = graph.adjList[j].begin(); it != graph.adjList[j].end(); ++it){
                 if (*it == i)
                     webs[i].push_back(make_pair(websites[j].PR, outgoinglinks[j]));
             }
         }
     }
-    for (int i = 0; i < counter; i++) {
-        for (int z = 0; z < webs[i].size(); z++) {
+    for (int i = 0; i < counter; i++){
+        for (int z = 0; z < webs[i].size(); z++){
             if (z == 0)
                 websites[i].PR = webs[i][z].first / webs[i][z].second;
             else if (z > 0)
@@ -157,15 +157,15 @@ void calculate_PR(Graph graph, Website* websites, float* outgoinglinks) {
     }
 
 }
-void initialize_PR(Graph graph, Website* websites) {
+void initialize_PR(Graph graph, Website* websites){
     float counter2 = counter;
     float* outgoinglinks = new float[counter];
     for (int i = 0; i < counter; i++)
         outgoinglinks[i] = 0;
-
+    
     for (int i = 0; i < counter; i++)
         websites[i].PR = 1 / counter2;
-
+    
     for (int j = 0; j < counter; j++)
     {
         list<int> ::iterator it;
@@ -175,25 +175,25 @@ void initialize_PR(Graph graph, Website* websites) {
     for (int i = 0; i < 2; i++)
         calculate_PR(graph, websites, outgoinglinks);
 }
-float website_score(Website website) {
+float website_score(Website website){
     /*
      pagescore = (0.4 * pagerank) + (((1 - ((0.1 * impressions) / (1 + (0.1 * impressions)))) * pagerank) +
      (((0.1 * impressions) / (1 + (0.1 * impressions))) * ctr) * 0.6)
      */
 
     float CTR = calculate_CTR(website);
-    float score = (0.4 * website.PR) + ((1 - ((0.1 * website.impressions) / (1 + 0.1 * website.impressions))) * website.PR + ((0.1 * website.impressions) / (1 + 0.1 * website.impressions)) * CTR) * 0.6;
-
+    float score = (0.4 * website.PR) + ((1 - ((0.1 * website.impressions)/(1 + 0.1 * website.impressions))) * website.PR + ((0.1 * website.impressions)/(1 + 0.1 * website.impressions)) * CTR) * 0.6;
+   
     return score;
 }
 
-Graph Create_Graph(vector<Edge>& edges) {
+Graph Create_Graph(vector<Edge>& edges){
     ifstream myfile;
     vector<string> lines;
     vector<string> linesreduced;
     vector<int> websiteIndices1;
     vector<int> websiteIndices2;
-    //    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/webgraph.csv");
+//    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/webgraph.csv");
     myfile.open("webgraph.csv");
     if (myfile.is_open())
     {
@@ -233,17 +233,17 @@ Graph Create_Graph(vector<Edge>& edges) {
             }
         }
     }
-    for (int i = 0; (i < websiteIndices1.size()) && (i < websiteIndices2.size()); i++)
+    for (int i = 0; (i < websiteIndices1.size())&&(i < websiteIndices2.size()); i++)
     {
-        edges.push_back({ websiteIndices1[i],websiteIndices2[i] });
+        edges.push_back({ websiteIndices1[i],websiteIndices2[i]});
     }
     Graph graph(edges, counter);
 
     return graph;
 }
-void openwebsite(string search) {
+void openwebsite(string search){
     system("CLS");
-    //system("clear");
+//    system("clear");
     cout << " WELCOME! " << endl << endl;
     cout << "Would you like to" << endl;
     cout << "1. Go back to search results" << endl;
@@ -258,20 +258,20 @@ void openwebsite(string search) {
         cin.ignore(1000, '\n');
         cout << "Invalid Input!" << endl;
         cout << "Please Enter a valid input." << endl;
-        cout << "Enter your choice : ";
+        cout<<"Enter your choice : ";
         cin >> choice;
     }
     cout << endl;
     if (choice == 1)
     {
         system("CLS");
-        //system("clear");
+//        system("clear");
         preform_search(search);
     }
     else if (choice == 2)
     {
         system("CLS");
-        //system("clear");
+//        system("clear");
         mainmenu();
     }
     else if (choice == 3)
@@ -280,7 +280,7 @@ void openwebsite(string search) {
         exit(0);
     }
 }
-bool pattern_search(string pattern, string txt) {
+bool pattern_search(string pattern, string txt){
     bool found = false;
     int s = pattern.length();
     int d = txt.length();
@@ -302,9 +302,9 @@ bool pattern_search(string pattern, string txt) {
     }
     return found;
 }
-void load_website_data() {
+void load_website_data(){
     ifstream myfile;
-    //    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/keyword.csv");
+//    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/keyword.csv");
     myfile.open("keyword.csv");
 
     vector<string> website_keywords;
@@ -349,8 +349,8 @@ void load_website_data() {
         }
     }
     myfile.close();
-
-    //    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/impressions.csv");
+    
+//    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/impressions.csv");
     myfile.open("impressions.csv");
     if (myfile.is_open())
     {
@@ -374,7 +374,7 @@ void load_website_data() {
     imp_data.clear();
     website_name.clear();
 
-    //    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/clicked.csv");
+//    myfile.open("/Users/faridabey/Documents/ANL and DSGN of algorithms Lab/anl_lab_project/anl_lab_project/clicked.csv");
     myfile.open("clicked.csv");
     if (myfile.is_open())
     {
@@ -388,7 +388,7 @@ void load_website_data() {
 
     for (int i = 0; i < imp_data.size(); i++)
     {
-        //        token(imp_data[i], ',', website_name);
+//        token(imp_data[i], ',', website_name);
         string cp = imp_data[i];
         website_name.push_back(strtok(&cp[0], ",\n"));
         websites1[i].clicked = atoi(strtok(nullptr, ",\n"));
@@ -410,12 +410,12 @@ void load_website_data() {
         else
         {
             //if (website_name[i].size() > 1)
-            websites1[kz].clicked = atoi(website_name[i].c_str());
+                websites1[kz].clicked = atoi(website_name[i].c_str());
         }
     }
     myfile.close();
 }
-void tokenize(string const& str, const char delim, vector<string>& out) {
+void tokenize(string const& str, const char delim, vector<string>& out){
     size_t start;
     size_t end = 0;
 
@@ -429,9 +429,9 @@ priority_queue<PAIR, vector<PAIR>, compare> make_map(vector<Website> resultswebs
     priority_queue<PAIR, vector<PAIR>, compare> pq;
     unordered_map<string, float> dict;
 
-    for (Website& website : resultswebsite) {
+    for ( Website& website : resultswebsite) {
         website.rank = website_score(website);
-        dict.insert({ website.websitename, website.rank });
+        dict.insert({website.websitename, website.rank});
     }
 
     for (const auto& entry : dict) {
@@ -441,7 +441,7 @@ priority_queue<PAIR, vector<PAIR>, compare> make_map(vector<Website> resultswebs
     return pq;
 }
 
-void preform_search(string search) {
+void preform_search(string search){
     priority_queue<PAIR, vector<PAIR>, compare> priorityQ;
     priority_queue<PAIR, vector<PAIR>, compare> priorityQ2;
     vector<string> words_array;
@@ -450,7 +450,7 @@ void preform_search(string search) {
     vector<string> words_array_OR;
     vector<string> words_array_Quoted;
     vector<Website> resultwebsites;
-
+    
     if (pattern_search("\"", search))
     {
         tokenize(search, '\"', words_array);
@@ -617,7 +617,7 @@ void preform_search(string search) {
     if (choice == 1)
     {
         system("CLS");
-        //system("clear");
+//        system("clear");
         int i = 0;
         while (!priorityQ2.empty())
         {
@@ -650,7 +650,7 @@ void preform_search(string search) {
                 if (websitesww[option - 1] == websites1[i].websitename)
                 {
                     websites1[i].clicked++;
-                    //system("read -n 1 -s -r -p \"Press any key to continue...\"");
+//                    system("read -n 1 -s -r -p \"Press any key to continue...\"");
                     system("PAUSE"); //windows version
                 }
             }
@@ -660,7 +660,7 @@ void preform_search(string search) {
     else if (choice == 2)
     {
         system("CLS");
-        //system("clear");
+//        system("clear");
         mainmenu();
     }
     else if (choice == 3)
@@ -669,14 +669,14 @@ void preform_search(string search) {
         exit(0);
     }
 }
-void search_input() {
+void search_input(){
     string search;
     cout << "Enter a sentence: " << endl;
     cin.ignore();
     getline(cin, search);
     preform_search(search);
 }
-void mainmenu() {
+void mainmenu(){
     cout << "Welcome!" << endl;
     cout << "What would you like to do?" << endl;
     cout << "1. New Search" << endl;
@@ -697,7 +697,7 @@ void mainmenu() {
     if (choice == 1)
     {
         system("CLS");
-        //system("clear");
+//        system("clear");
         search_input();
     }
     else if (choice == 2)
